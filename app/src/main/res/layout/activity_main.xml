@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:gravity="center"
+	android:orientation="vertical"
 	android:padding="16dp"
 	tools:context=".MainActivity">
 
@@ -11,8 +13,15 @@
 		android:id="@+id/btn_accessibility"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center"
 		android:layout_margin="8dp"
 		android:onClick="onClick"
 		android:text="Go to Accessibility"/>
-</FrameLayout>
+
+	<Button
+		android:id="@+id/btn_notifications"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:onClick="onClick"
+		android:text="Go to Notifications"/>
+</LinearLayout>
