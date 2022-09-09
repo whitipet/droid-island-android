@@ -74,12 +74,12 @@ class OverlayService : AccessibilityService() {
 		return null
 	}
 
-	fun showNotification(notification: Notification) {
+	fun showNotification(notification: Notification? = null) {
 		Log.d("OverlayService", "showNotification() called with: notification = $notification")
 		getIslandView()?.expand()
 	}
 
-	fun hideNotification(notification: Notification) {
+	fun hideNotification(notification: Notification? = null) {
 		Log.d("OverlayService", "hideNotification() called with: notification = $notification")
 		getIslandView()?.collapse()
 	}
