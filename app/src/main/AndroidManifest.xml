@@ -3,6 +3,14 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.whitipet.droidisland">
 
+	<permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
+	<queries>
+		<intent>
+			<action android:name="android.intent.action.MAIN"/>
+		</intent>
+	</queries>
+
 	<application
 		android:label="Droid Island"
 		android:supportsRtl="true"

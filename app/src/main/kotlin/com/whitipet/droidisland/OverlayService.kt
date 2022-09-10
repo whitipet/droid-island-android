@@ -1,9 +1,9 @@
 package com.whitipet.droidisland
 
 import android.accessibilityservice.AccessibilityService
-import android.app.Notification
 import android.content.Intent
 import android.graphics.PixelFormat
+import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowInsets
@@ -74,13 +74,13 @@ class OverlayService : AccessibilityService() {
 		return null
 	}
 
-	fun showNotification(notification: Notification? = null) {
-		Log.d("OverlayService", "showNotification() called with: notification = $notification")
-		getIslandView()?.expand()
+	fun onNotificationPosted(sbn: StatusBarNotification?) {
+		Log.d("OverlayService", "onNotificationPosted() called with: sbn = ${sbn?.notification}")
+		getIslandView()?.expand(sbn?.notification)
 	}
 
-	fun hideNotification(notification: Notification? = null) {
-		Log.d("OverlayService", "hideNotification() called with: notification = $notification")
-		getIslandView()?.collapse()
+	fun onNotificationRemoved(sbn: StatusBarNotification?) {
+		Log.d("OverlayService", "onNotificationRemoved() called with: sbn = ${sbn?.notification}")
+		getIslandView()?.collapse(sbn?.notification)
 	}
 }
