@@ -12,8 +12,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 			R.id.btn_accessibility -> startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
 			R.id.btn_notifications -> startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
 
-			R.id.btn_simulate_notification_posted -> OverlayService.instance?.showNotification()
-			R.id.btn_simulate_notification_removed -> OverlayService.instance?.hideNotification()
+//			R.id.btn_simulate_notification_posted -> OverlayService.instance?.onNotificationPosted()
+//			R.id.btn_simulate_notification_removed -> OverlayService.instance?.onNotificationRemoved()
 		}
 	}
 }

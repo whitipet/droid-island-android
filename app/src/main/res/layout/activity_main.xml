@@ -25,19 +25,19 @@
 		android:onClick="onClick"
 		android:text="Go to Notifications"/>
 
-	<Button
-		android:id="@+id/btn_simulate_notification_posted"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="8dp"
-		android:onClick="onClick"
-		android:text="Simulate notification posted"/>
+	<!--<Button-->
+	<!--	android:id="@+id/btn_simulate_notification_posted"-->
+	<!--	android:layout_width="match_parent"-->
+	<!--	android:layout_height="wrap_content"-->
+	<!--	android:layout_margin="8dp"-->
+	<!--	android:onClick="onClick"-->
+	<!--	android:text="Simulate notification posted"/>-->
 
-	<Button
-		android:id="@+id/btn_simulate_notification_removed"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="8dp"
-		android:onClick="onClick"
-		android:text="Simulate notification removed"/>
+	<!--<Button-->
+	<!--	android:id="@+id/btn_simulate_notification_removed"-->
+	<!--	android:layout_width="match_parent"-->
+	<!--	android:layout_height="wrap_content"-->
+	<!--	android:layout_margin="8dp"-->
+	<!--	android:onClick="onClick"-->
+	<!--	android:text="Simulate notification removed"/>-->
 </LinearLayout>

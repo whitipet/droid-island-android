@@ -74,12 +74,12 @@ class OverlayService : AccessibilityService() {
 		return null
 	}
 
-	fun onNotificationPosted(sbn: StatusBarNotification?) {
+	fun onNotificationPosted(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationPosted() called with: sbn = ${sbn?.notification}")
 		getIslandView()?.expand(sbn?.notification)
 	}
 
-	fun onNotificationRemoved(sbn: StatusBarNotification?) {
+	fun onNotificationRemoved(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationRemoved() called with: sbn = ${sbn?.notification}")
 		getIslandView()?.collapse(sbn?.notification)
 	}
