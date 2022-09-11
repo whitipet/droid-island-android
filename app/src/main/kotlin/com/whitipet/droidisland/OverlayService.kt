@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.view.WindowMetrics
 import android.view.accessibility.AccessibilityEvent
 
 class OverlayService : AccessibilityService() {
@@ -42,45 +41,50 @@ class OverlayService : AccessibilityService() {
 	//endregion OverlayService
 
 	private val wm: WindowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
-	private var islandView: IslandView? = null
 
-	private fun getIslandView(): IslandView? {
-		if (islandView == null) islandView = IslandView(this, wm)
-		islandView?.let {
-			if (it.parent == null) {
-				val windowMetrics: WindowMetrics = wm.currentWindowMetrics
-				val statusBarInsets = windowMetrics.windowInsets.getInsets(WindowInsets.Type.statusBars())
+	private var _islandView: IslandView? = null
+	private val islandView: IslandView?
+		get() {
+			val currentWindowMetrics = wm.currentWindowMetrics
+			val windowInsets = currentWindowMetrics.windowInsets
+			val displayCutout = windowInsets.displayCutout
+			if (displayCutout != null) {
+				if (this._islandView == null) _islandView = IslandView(this, wm)
+				_islandView?.let { view ->
+					if (view.parent != null) return view
 
-				val layoutParamsOverlay = WindowManager.LayoutParams(
-					windowMetrics.bounds.width(),
-					statusBarInsets.top,
-					WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-							or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-					PixelFormat.TRANSPARENT
-				).apply {
-					gravity = Gravity.TOP
-					y = -statusBarInsets.top
-				}
+					val statusBarInsets = windowInsets.getInsets(WindowInsets.Type.statusBars())
+					val layoutParamsOverlay = WindowManager.LayoutParams(
+						currentWindowMetrics.bounds.width(),
+						statusBarInsets.top,
+						WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+								or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+						PixelFormat.TRANSPARENT
+					).apply {
+						gravity = Gravity.TOP
+						y = -statusBarInsets.top
+					}
 
-				try {
-					wm.addView(it, layoutParamsOverlay)
-				} catch (e: Exception) {
-					Log.d("OverlayService", "getIslandView() addView Exception: $e")
+					try {
+						wm.addView(view, layoutParamsOverlay)
+						return view
+					} catch (e: Exception) {
+						Log.d("OverlayService", "getIslandView() addView Exception: $e")
+					}
 				}
 			}
-			return it
+			_islandView = null
+			return null
 		}
-		return null
-	}
 
 	fun onNotificationPosted(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationPosted() called with: sbn = ${sbn?.notification}")
-		getIslandView()?.expand(sbn?.notification)
+		islandView?.expand(sbn?.notification)
 	}
 
 	fun onNotificationRemoved(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationRemoved() called with: sbn = ${sbn?.notification}")
-		getIslandView()?.collapse(sbn?.notification)
+		islandView?.collapse(sbn?.notification)
 	}
 }
