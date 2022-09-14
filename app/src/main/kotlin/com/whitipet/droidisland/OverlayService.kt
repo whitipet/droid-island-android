@@ -46,14 +46,12 @@ class OverlayService : AccessibilityService() {
 	private val islandView: IslandView?
 		get() {
 			val currentWindowMetrics = wm.currentWindowMetrics
-			val windowInsets = currentWindowMetrics.windowInsets
-			val displayCutout = windowInsets.displayCutout
-			if (displayCutout != null) {
+			if (wm.isDisplayCutoutSuitable()) {
 				if (this._islandView == null) _islandView = IslandView(this, wm)
 				_islandView?.let { view ->
 					if (view.parent != null) return view
 
-					val statusBarInsets = windowInsets.getInsets(WindowInsets.Type.statusBars())
+					val statusBarInsets = wm.currentWindowMetrics.windowInsets.getInsets(WindowInsets.Type.statusBars())
 					val layoutParamsOverlay = WindowManager.LayoutParams(
 						currentWindowMetrics.bounds.width(),
 						statusBarInsets.top,
