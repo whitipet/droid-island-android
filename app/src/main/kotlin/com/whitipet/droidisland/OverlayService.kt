@@ -2,11 +2,10 @@ package com.whitipet.droidisland
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import android.view.Gravity
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 
@@ -19,6 +18,8 @@ class OverlayService : AccessibilityService() {
 
 	override fun onServiceConnected() {
 		instance = this
+
+		init()
 	}
 
 	override fun onUnbind(intent: Intent?): Boolean {
@@ -42,39 +43,73 @@ class OverlayService : AccessibilityService() {
 
 	private val wm: WindowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
 
-	private var _islandView: IslandView? = null
-	private val islandView: IslandView?
-		get() {
-			val currentWindowMetrics = wm.currentWindowMetrics
-			if (wm.isDisplayCutoutSuitable()) {
-				if (this._islandView == null) _islandView = IslandView(this, wm)
-				_islandView?.let { view ->
-					if (view.parent != null) return view
+	private var islandView: IslandView? = null
 
-					val statusBarInsets = wm.currentWindowMetrics.windowInsets.getInsets(WindowInsets.Type.statusBars())
-					val layoutParamsOverlay = WindowManager.LayoutParams(
-						currentWindowMetrics.bounds.width(),
-						statusBarInsets.top,
-						WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-								or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-						PixelFormat.TRANSPARENT
-					).apply {
-						gravity = Gravity.TOP
-						y = -statusBarInsets.top
-					}
+	private val lpIslandView: WindowManager.LayoutParams by lazy {
+		WindowManager.LayoutParams(
+			WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+					or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+					or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+			PixelFormat.TRANSPARENT
+		)
+	}
 
-					try {
-						wm.addView(view, layoutParamsOverlay)
-						return view
-					} catch (e: Exception) {
-						Log.d("OverlayService", "getIslandView() addView Exception: $e")
-					}
-				}
-			}
-			_islandView = null
-			return null
+	private fun init() {
+		if (islandView == null) {
+			if (!wm.isDisplayCutoutSuitable()) return
+
+			islandView = IslandView(this, wm)
+			updateIslandViewLayout()
+			addIslandView()
+		} else {
+			updateIslandViewLayout()
 		}
+	}
+
+	private fun addIslandView() = islandView?.let { view ->
+		try {
+			wm.addView(view, lpIslandView)
+		} catch (e: Exception) {
+			Log.d("OverlayService", "getIslandView() addView Exception: $e")
+		}
+	}
+
+	private fun updateIslandViewLayout() = islandView?.let { view ->
+		val displayCutoutSide: DisplayCutoutSide = wm.getDisplayCutoutSide()
+		when (displayCutoutSide.side) {
+			Side.TOP -> {
+				lpIslandView.x = 0
+				lpIslandView.y = -displayCutoutSide.size
+			}
+			Side.LEFT -> {
+				lpIslandView.x = -displayCutoutSide.size
+				lpIslandView.y = 0
+			}
+			Side.RIGHT -> {
+				lpIslandView.x = displayCutoutSide.size
+				lpIslandView.y = 0
+			}
+			Side.BOTTOM -> {
+				lpIslandView.x = 0
+				lpIslandView.y = displayCutoutSide.size
+			}
+			Side.UNDEFINED -> {
+				// TODO
+			}
+		}
+
+		try {
+			wm.updateViewLayout(view, lpIslandView)
+		} catch (exception: Exception) {
+			Log.d("OverlayService", "updateIslandViewLayout() updateViewLayout Exception: $exception")
+		}
+	}
+
+	override fun onConfigurationChanged(newConfig: Configuration) {
+		super.onConfigurationChanged(newConfig)
+		updateIslandViewLayout()
+	}
 
 	fun onNotificationPosted(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationPosted() called with: sbn = ${sbn?.notification}")
