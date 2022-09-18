@@ -1,11 +1,13 @@
 package com.whitipet.droidisland
 
 import android.accessibilityservice.AccessibilityService
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 
@@ -75,28 +77,38 @@ class OverlayService : AccessibilityService() {
 		}
 	}
 
+	@SuppressLint("RtlHardcoded")
 	private fun updateIslandViewLayout() = islandView?.let { view ->
+		lpIslandView.width = wm.currentWindowMetrics.bounds.width()
+		lpIslandView.height = wm.currentWindowMetrics.bounds.height()
+
 		val displayCutoutSide: DisplayCutoutSide = wm.getDisplayCutoutSide()
 		when (displayCutoutSide.side) {
 			Side.TOP -> {
+				lpIslandView.gravity = Gravity.TOP
+
 				lpIslandView.x = 0
 				lpIslandView.y = -displayCutoutSide.size
 			}
 			Side.LEFT -> {
+				lpIslandView.gravity = Gravity.LEFT
+
 				lpIslandView.x = -displayCutoutSide.size
 				lpIslandView.y = 0
 			}
 			Side.RIGHT -> {
-				lpIslandView.x = displayCutoutSide.size
+				lpIslandView.gravity = Gravity.RIGHT
+
+				lpIslandView.x = -displayCutoutSide.size
 				lpIslandView.y = 0
 			}
 			Side.BOTTOM -> {
+				lpIslandView.gravity = Gravity.BOTTOM
+
 				lpIslandView.x = 0
-				lpIslandView.y = displayCutoutSide.size
+				lpIslandView.y = -displayCutoutSide.size
 			}
-			Side.UNDEFINED -> {
-				// TODO
-			}
+			Side.UNDEFINED -> Log.d("OverlayService", "updateIslandViewLayout Side.UNDEFINED")
 		}
 
 		try {

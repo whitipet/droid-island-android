@@ -4,7 +4,7 @@ import android.view.DisplayCutout
 import android.view.WindowManager
 import androidx.annotation.IntDef
 
-private val WindowManager.displayCutout: DisplayCutout? get() = currentWindowMetrics.windowInsets.displayCutout
+internal val WindowManager.displayCutout: DisplayCutout? get() = currentWindowMetrics.windowInsets.displayCutout
 
 // TODO
 internal fun WindowManager.isDisplayCutoutSuitable(): Boolean = displayCutout != null
