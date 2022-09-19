@@ -15,17 +15,22 @@
 		android:supportsRtl="false"
 		android:theme="@style/Theme.DroidIsland">
 
-		<activity
-			android:name=".MainActivity"
+		<activity-alias
+			android:name=".Launcher"
 			android:exported="true"
-			android:screenOrientation="fullSensor">
+			android:targetActivity=".MainActivity">
 
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-
 				<category android:name="android.intent.category.LAUNCHER"/>
+
+				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
-		</activity>
+		</activity-alias>
+
+		<activity
+			android:name=".MainActivity"
+			android:exported="false"
+			android:screenOrientation="fullSensor"/>
 
 		<service
 			android:name=".OverlayService"
