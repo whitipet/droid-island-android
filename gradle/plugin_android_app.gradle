@@ -1,0 +1,22 @@
+apply from: file("$mainRootDir/gradle/plugin_android.gradle")
+
+android {
+	defaultConfig {
+		applicationId = config.applicationId
+
+		versionCode = config.versionCode
+		versionName = config.versionName
+
+		addManifestPlaceholders(appName: config.appName)
+	}
+
+	buildTypes {
+		debug {
+			shrinkResources = false
+		}
+
+		release {
+			shrinkResources = true
+		}
+	}
+}

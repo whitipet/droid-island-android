@@ -1,0 +1,44 @@
+android {
+	compileSdkVersion = config.compileSdkVersion
+	buildToolsVersion = config.buildToolsVersion
+
+	defaultConfig {
+		minSdkVersion(config.minSdkVersion)
+		targetSdkVersion(config.compileSdkVersion)
+
+		resConfigs(config.resConfigs)
+		ndk.abiFilters = config.availableAbi
+		vectorDrawables.useSupportLibrary = true
+	}
+
+	compileOptions {
+		sourceCompatibility = config.javaVersion
+		targetCompatibility = config.javaVersion
+
+		incremental = true
+	}
+
+	lint.abortOnError = false
+
+	buildTypes {
+		debug {
+			debuggable = true
+			zipAlignEnabled = false
+			crunchPngs = false
+			minifyEnabled = false
+		}
+
+		release {
+			debuggable = false
+			zipAlignEnabled = true
+			crunchPngs = true
+			minifyEnabled = true
+
+			proguardFiles(
+					getDefaultProguardFile("proguard-android-optimize.txt"),
+					"$mainRootDir/proguard-rules-logs.pro",
+					"$mainRootDir/proguard-rules.pro",
+			)
+		}
+	}
+}

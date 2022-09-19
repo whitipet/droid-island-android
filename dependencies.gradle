@@ -1,0 +1,105 @@
+def v = [
+		androidGradlePlugin : "7.3.0",             // https://mvnrepository.com/artifact/com.android.tools.build/gradle?repo=google                https://developer.android.com/studio/releases/gradle-plugin
+		r8                  : "4.0.29",            // https://r8.googlesource.com/r8/+/refs/heads/4.0
+		bundletool          : "1.11.2",            // https://mvnrepository.com/artifact/com.android.tools.build/bundletool                        https://github.com/google/bundletool
+
+		kotlin              : "1.7.10",            // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib                        https://blog.jetbrains.com/kotlin/category/releases
+
+		androidx            : [
+				activity           : "1.5.1",           // https://mvnrepository.com/artifact/androidx.activity/activity                                https://developer.android.com/jetpack/androidx/releases/activity
+				annotation         : "1.4.0",           // https://mvnrepository.com/artifact/androidx.annotation/annotation                            https://developer.android.com/jetpack/androidx/releases/annotation
+				appCompat          : "1.5.1",           // https://mvnrepository.com/artifact/androidx.appcompat/appcompat                              https://developer.android.com/jetpack/androidx/releases/appcompat
+				arch               : "2.1.0",           // https://mvnrepository.com/artifact/androidx.arch.core/core-common                            https://developer.android.com/jetpack/androidx/releases/arch
+				collection         : "1.2.0",           // https://mvnrepository.com/artifact/androidx.collection/collection                            https://developer.android.com/jetpack/androidx/releases/collection
+				constraintLayout   : "2.1.4",           // https://mvnrepository.com/artifact/androidx.constraintlayout/constraintlayout                https://developer.android.com/jetpack/androidx/releases/constraintlayout
+				coordinatorLayout  : "1.2.0",           // https://mvnrepository.com/artifact/androidx.coordinatorlayout/coordinatorlayout              https://developer.android.com/jetpack/androidx/releases/coordinatorlayout
+				core               : "1.9.0",           // https://mvnrepository.com/artifact/androidx.core/core                                        https://developer.android.com/jetpack/androidx/releases/core
+				cursoradApter      : "1.0.0",           // https://mvnrepository.com/artifact/androidx.cursoradapter/cursoradapter                      https://developer.android.com/jetpack/androidx/releases/cursoradapter
+				customView         : "1.1.0",           // https://mvnrepository.com/artifact/androidx.customview/customview                            https://developer.android.com/jetpack/androidx/releases/customview
+				fragment           : "1.5.2",           // https://mvnrepository.com/artifact/androidx.fragment/fragment                                https://developer.android.com/jetpack/androidx/releases/fragment
+				interpolator       : "1.0.0",           // https://mvnrepository.com/artifact/androidx.interpolator/interpolator                        https://developer.android.com/jetpack/androidx/releases/interpolator
+				lifecycle          : "2.5.1",           // https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-common                       https://developer.android.com/jetpack/androidx/releases/lifecycle
+				savedState         : "1.2.0",           // https://mvnrepository.com/artifact/androidx.savedstate/savedstate                            https://developer.android.com/jetpack/androidx/releases/savedstate
+				transition         : "1.4.1",           // https://mvnrepository.com/artifact/androidx.transition/transition                            https://developer.android.com/jetpack/androidx/releases/transition
+				vectorDrawable     : "1.1.0",           // https://mvnrepository.com/artifact/androidx.vectordrawable/vectordrawable                    https://developer.android.com/jetpack/androidx/releases/vectordrawable
+				versionedParcelable: "1.1.1",           // https://mvnrepository.com/artifact/androidx.versionedparcelable/versionedparcelable          https://developer.android.com/jetpack/androidx/releases/versionedparcelable
+		],
+
+		google              : [
+				material: "1.6.1",                      // https://mvnrepository.com/artifact/com.google.android.material/material                      https://github.com/material-components/material-components-android/releases
+		],
+
+		jetBrainsAnnotations: "23.0.0",                 // https://mvnrepository.com/artifact/org.jetbrains/annotations                                 https://github.com/JetBrains/java-annotations
+]
+
+ext.dep = [
+		androidGradlePlugin : "com.android.tools.build:gradle:$v.androidGradlePlugin",
+		r8                  : "com.android.tools:r8:$v.r8",
+		kotlinPlugin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$v.kotlin",
+		bundletool          : "com.android.tools.build:bundletool:$v.bundletool",
+
+		kotlin              : [
+				extensionsRuntime: "org.jetbrains.kotlin:kotlin-android-extensions-runtime:$v.kotlin",
+				stdlib           : "org.jetbrains.kotlin:kotlin-stdlib:$v.kotlin",
+				stdlibCommon     : "org.jetbrains.kotlin:kotlin-stdlib-common:$v.kotlin",
+				stdlibJdk7       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$v.kotlin",
+				stdlibJdk8       : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$v.kotlin",
+		],
+
+		androidx            : [
+				activity           : [
+						activity   : "androidx.activity:activity:$v.androidx.activity",
+						activityKtx: "androidx.activity:activity-ktx:$v.androidx.activity",
+				],
+				annotation         : "androidx.annotation:annotation:$v.androidx.annotation",
+				appCompat          : "androidx.appcompat:appcompat:$v.androidx.appCompat",
+				arch               : [
+						coreCommon : "androidx.arch.core:core-runtime:$v.androidx.arch",
+						coreRuntime: "androidx.arch.core:core-common:$v.androidx.arch",
+						coreTesting: "androidx.arch.core:core-testing:$v.androidx.arch",
+				],
+				collection         : "androidx.collection:collection:$v.androidx.collection",
+				constraintLayout   : "androidx.constraintlayout:constraintlayout:$v.androidx.constraintLayout",
+				coordinatorLayout  : "androidx.coordinatorlayout:coordinatorlayout:$v.androidx.coordinatorLayout",
+				core               : [
+						core   : "androidx.core:core:$v.androidx.core",
+						coreKtx: "androidx.core:core-ktx:$v.androidx.core",
+				],
+				cursoradApter      : "androidx.cursoradapter:cursoradapter:$v.androidx.cursoradApter",
+				customView         : "androidx.customview:customview:$v.androidx.customView",
+				fragment           : [
+						fragment   : "androidx.fragment:fragment:$v.androidx.fragment",
+						fragmentKtx: "androidx.fragment:fragment-ktx:$v.androidx.fragment",
+				],
+				interpolator       : "androidx.interpolator:interpolator:$v.androidx.interpolator",
+				lifecycle          : [
+						common         : "androidx.lifecycle:lifecycle-common:$v.androidx.lifecycle",
+						commonJava8    : "androidx.lifecycle:lifecycle-common-java8:$v.androidx.lifecycle",
+						extensions     : "androidx.lifecycle:lifecycle-extensions:$v.androidx.lifecycle",     // ViewModel and LiveData
+						liveData       : "androidx.lifecycle:lifecycle-livedata:$v.androidx.lifecycle",       // just LiveData
+						liveDataKtx    : "androidx.lifecycle:lifecycle-livedata-ktx:$v.androidx.lifecycle",   // just LiveData
+						liveDataCore   : "androidx.lifecycle:lifecycle-livedata-core:$v.androidx.lifecycle",
+						liveDataCoreKtx: "androidx.lifecycle:lifecycle-livedata-core-ktx:$v.androidx.lifecycle",
+						process        : "androidx.lifecycle:lifecycle-process:$v.androidx.lifecycle",
+						runtime        : "androidx.lifecycle:lifecycle-runtime:$v.androidx.lifecycle",        // just Lifecycles
+						runtimeKtx     : "androidx.lifecycle:lifecycle-runtime-ktx:$v.androidx.lifecycle",    // just Lifecycles
+						service        : "androidx.lifecycle:lifecycle-service:$v.androidx.lifecycle",        // just LifecycleService
+						viewModel      : "androidx.lifecycle:lifecycle-viewmodel:$v.androidx.lifecycle",      // just ViewModel
+						viewModelKtx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:$v.androidx.lifecycle",  // just ViewModel
+				],
+				savedState         : "androidx.savedstate:savedstate:$v.androidx.savedState",
+				transition         : "androidx.transition:transition:$v.androidx.transition",
+				vectorDrawable     : [
+						core    : "androidx.vectordrawable:vectordrawable:$v.androidx.vectorDrawable",
+						animated: "androidx.vectordrawable:vectordrawable-animated:$v.androidx.vectorDrawable",
+						seekable: "androidx.vectordrawable:vectordrawable-seekable:$v.androidx.vectorDrawable",
+				],
+				versionedParcelable: "androidx.versionedparcelable:versionedparcelable:$v.androidx.versionedParcelable",
+		],
+
+		google              : [
+				material: "com.google.android.material:material:$v.google.material",
+		],
+
+		jetBrainsAnnotations: "org.jetbrains:annotations:$v.jetBrainsAnnotations",
+]

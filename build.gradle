@@ -1,9 +1,85 @@
-plugins {
-	id "com.android.application" version "7.3.0" apply false
-	id "com.android.library" version "7.3.0" apply false
-	id "org.jetbrains.kotlin.android" version "1.7.10" apply false
+buildscript {
+	ext.mainRootDir = rootProject.projectDir.absolutePath
+
+	apply from: file("project_config.gradle")
+	apply from: file("dependencies.gradle")
+	apply from: file("dependencies_resolution.gradle")
+
+	repositories {
+		google()
+		mavenCentral()
+		maven {
+			name = "r8"
+			url = "https://storage.googleapis.com/r8-releases/raw"
+			content { includeGroup("com.android.tools") }
+		}
+	}
+
+	dependencies {
+		classpath dep.r8
+		classpath dep.androidGradlePlugin
+		classpath dep.kotlinPlugin
+	}
+
+	configurations.all {
+		resolutionStrategy.forcedModules = forceDepsBuild
+	}
 }
 
-task clean(type: Delete) {
-	delete rootProject.buildDir
+subprojects {
+	repositories {
+		google()
+		mavenCentral()
+	}
+
+	configurations.all {
+		resolutionStrategy.forcedModules = forceDepsProjects
+		excludeDepsProjects(it)
+	}
+
+	//region Projects config
+	def javaPlugin = "org.gradle.api.plugins.JavaPlugin"
+	def javaBasePlugin = "org.gradle.api.plugins.JavaBasePlugin"
+	def javaBasePluginInject = javaBasePlugin + '$' + "Inject"
+	def kotlinPlugin = "org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper"
+	def kotlinAndroidPlugin = "org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper"
+	def androidAppPlugin = "com.android.build.gradle.AppPlugin"
+	project.plugins.whenPluginAdded { plugin ->
+		switch (plugin.class.name) {
+			case [javaPlugin, javaBasePlugin, javaBasePluginInject]:
+				project.apply from: file("$mainRootDir/gradle/plugin_java.gradle")
+				break
+			case kotlinPlugin:
+				project.apply from: file("$mainRootDir/gradle/plugin_kotlin.gradle")
+				break
+			case kotlinAndroidPlugin:
+				project.apply from: file("$mainRootDir/gradle/plugin_kotlin_android.gradle")
+				break
+			case androidAppPlugin:
+				project.apply from: file("$mainRootDir/gradle/plugin_android_app.gradle")
+				break
+		}
+	}
+	//endregion Projects config
 }
+
+allprojects {
+	gradle.projectsEvaluated {
+		tasks.withType(JavaCompile) {
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+		}
+	}
+}
+
+if (hasProperty("buildScan")) {
+	buildScan {
+		termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		termsOfServiceAgree = "yes"
+	}
+}
+
+wrapper {
+	distributionType = Wrapper.DistributionType.BIN
+}
+
+apply from: file("gradle/tasks.gradle")

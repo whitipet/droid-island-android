@@ -1,0 +1,16 @@
+ext.config = [
+		applicationId    : "com.whitipet.droidisland",
+		appName          : "Droid Island",
+		versionCode      : 1,
+		versionName      : "1.0.0-alpha1",
+
+		minSdkVersion    : 31,
+		compileSdkVersion: 33,
+
+		buildToolsVersion: "33.0.0",
+
+		resConfigs       : ["en"],
+		availableAbi     : ["arm64-v8a", "armeabi-v7a", "x86", "x86_64"],
+
+		javaVersion      : JavaVersion.VERSION_11,
+]

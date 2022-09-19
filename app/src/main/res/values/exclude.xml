@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<!--region CardView-->
+	<declare-styleable name="CardView">
+		<attr name="cardBackgroundColor" format="color"/>
+		<attr name="cardCornerRadius" format="dimension"/>
+		<attr name="cardElevation" format="dimension"/>
+	</declare-styleable>
+	<style name="CardView" parent="" tools:ignore="PrivateResource"/>
+	<!--endregion CardView-->
+</resources>

@@ -1,0 +1,15 @@
+android.kotlinOptions.jvmTarget = config.javaVersion
+
+tasks.whenTaskAdded {
+    if (it.class.simpleName.contains("KotlinCompile")) {
+        kotlinOptions.jvmTarget = config.javaVersion
+    }
+}
+
+android.sourceSets.all {
+    java.srcDirs += "src/$name/kotlin"
+}
+
+dependencies {
+    implementation dep.kotlin.stdlib
+}
