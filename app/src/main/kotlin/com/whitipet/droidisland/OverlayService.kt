@@ -2,9 +2,13 @@ package com.whitipet.droidisland
 
 import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.media.session.MediaController
+import android.media.session.MediaSessionManager
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.view.Gravity
@@ -44,6 +48,23 @@ class OverlayService : AccessibilityService() {
 	}
 	//endregion OverlayService
 
+	private fun init() {
+		initIslandView()
+		initMediaSessionsListener()
+	}
+
+	override fun onConfigurationChanged(newConfig: Configuration) {
+		super.onConfigurationChanged(newConfig)
+		updateIslandViewLayout()
+	}
+
+	private fun destroy() {
+		Log.d("OverlayService", "destroy() called")
+		removeIslandView()
+		removeMediaSessionsChangedListener()
+	}
+
+	//region IslandView
 	private val wm: WindowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
 
 	private val lpIslandView: WindowManager.LayoutParams by lazy {
@@ -56,11 +77,6 @@ class OverlayService : AccessibilityService() {
 		)
 	}
 
-	private fun init() {
-		initIslandView()
-	}
-
-	//region IslandView
 	private var islandView: IslandView? = null
 
 	private fun initIslandView() {
@@ -133,15 +149,29 @@ class OverlayService : AccessibilityService() {
 	}
 	//endregion IslandView
 
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-		updateIslandViewLayout()
+	//region MediaSessionsListener
+	private val mediaSessionManager: MediaSessionManager by lazy { getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager }
+	private val componentNotificationListener: ComponentName by lazy {
+		ComponentName(this, NotificationListenerService::class.java)
 	}
 
-	private fun destroy() {
-		Log.d("OverlayService", "destroy() called")
-		removeIslandView()
+	private val onActiveMediaSessionsChangedListener =
+		MediaSessionManager.OnActiveSessionsChangedListener { onActiveMediaSessionsChanged(it) }
+
+	private fun initMediaSessionsListener() {
+		addMediaSessionsChangedListener()
+		onActiveMediaSessionsChanged(mediaSessionManager.getActiveSessions(componentNotificationListener))
 	}
+
+	private fun addMediaSessionsChangedListener() =
+		mediaSessionManager.addOnActiveSessionsChangedListener(
+			onActiveMediaSessionsChangedListener,
+			componentNotificationListener
+		)
+
+	private fun removeMediaSessionsChangedListener() =
+		mediaSessionManager.removeOnActiveSessionsChangedListener(onActiveMediaSessionsChangedListener)
+	//endregion MediaSessionsListener
 
 	fun onNotificationPosted(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationPosted() called with: sbn = ${sbn?.notification}")
@@ -151,5 +181,9 @@ class OverlayService : AccessibilityService() {
 	fun onNotificationRemoved(sbn: StatusBarNotification? = null) {
 		Log.d("OverlayService", "onNotificationRemoved() called with: sbn = ${sbn?.notification}")
 		islandView?.collapse(sbn?.notification)
+	}
+
+	private fun onActiveMediaSessionsChanged(mediaControllers: List<MediaController>?) {
+		Log.d("OverlayService", "onActiveSessionsChanged() called with: mediaControllers = $mediaControllers")
 	}
 }

@@ -9,6 +9,8 @@
 		</intent>
 	</queries>
 
+	<permission android:name="android.Manifest.permission.MEDIA_CONTENT_CONTROL"/>
+
 	<application
 		android:label="${appName}"
 		android:supportsRtl="false"
