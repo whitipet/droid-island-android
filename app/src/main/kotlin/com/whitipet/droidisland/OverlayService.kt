@@ -31,6 +31,7 @@ class OverlayService : AccessibilityService() {
 
 	override fun onDestroy() {
 		instance = null
+		destroy()
 		super.onDestroy()
 	}
 
@@ -45,8 +46,6 @@ class OverlayService : AccessibilityService() {
 
 	private val wm: WindowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
 
-	private var islandView: IslandView? = null
-
 	private val lpIslandView: WindowManager.LayoutParams by lazy {
 		WindowManager.LayoutParams(
 			WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
@@ -58,6 +57,13 @@ class OverlayService : AccessibilityService() {
 	}
 
 	private fun init() {
+		initIslandView()
+	}
+
+	//region IslandView
+	private var islandView: IslandView? = null
+
+	private fun initIslandView() {
 		if (islandView == null) {
 			if (!wm.isDisplayCutoutSuitable()) return
 
@@ -73,7 +79,15 @@ class OverlayService : AccessibilityService() {
 		try {
 			wm.addView(view, lpIslandView)
 		} catch (e: Exception) {
-			Log.d("OverlayService", "getIslandView() addView Exception: $e")
+			Log.d("OverlayService", "addIslandView() addView Exception: $e")
+		}
+	}
+
+	private fun removeIslandView() = islandView?.let { view ->
+		try {
+			wm.removeView(view)
+		} catch (e: Exception) {
+			Log.d("OverlayService", "removeIslandView() removeView Exception: $e")
 		}
 	}
 
@@ -117,10 +131,16 @@ class OverlayService : AccessibilityService() {
 			Log.d("OverlayService", "updateIslandViewLayout() updateViewLayout Exception: $exception")
 		}
 	}
+	//endregion IslandView
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		updateIslandViewLayout()
+	}
+
+	private fun destroy() {
+		Log.d("OverlayService", "destroy() called")
+		removeIslandView()
 	}
 
 	fun onNotificationPosted(sbn: StatusBarNotification? = null) {
